@@ -6,6 +6,10 @@
   apt:
     name: screen
 
+- name: apt install openjdk
+  apt:
+    name: openjdk-8-jre
+
 - name: Allow minecraft through firewall
   ufw:
     proto: tcp
@@ -15,7 +19,7 @@
 - name: add user.
   user: 
     name: '{{ minecraft.user_name }}'
-    createhome: yes
+    createhome: false 
 
 - name: make minecraft directory
   file:
@@ -34,7 +38,7 @@
 
 - name: make startup script
   copy:
-    src: ./opt/minecraft/server/minecraft_server_start.sh
+    src: opt/minecraft/server/minecraft_server_start.sh
     dest: /opt/minecraft/server/minecraft_server_start.sh
     owner: '{{ minecraft.user_name }}'
     group: '{{ minecraft.user_name }}'
@@ -42,7 +46,7 @@
 
 - name: make stop script
   copy:
-    src: ./opt/minecraft/server/minecraft_server_stop.sh
+    src: opt/minecraft/server/minecraft_server_stop.sh
     dest: /opt/minecraft/server/minecraft_server_stop.sh
     owner: '{{ minecraft.user_name }}'
     group: '{{ minecraft.user_name }}'
@@ -50,7 +54,7 @@
 
 - name: make eula.txt
   copy:
-    src: ./opt/minecraft/server/eula.txt
+    src: opt/minecraft/server/eula.txt
     dest: /opt/minecraft/server/eula.txt
     owner: '{{ minecraft.user_name }}'
     group: '{{ minecraft.user_name }}'
@@ -58,7 +62,7 @@
 
 - name: make service file
   template:
-    src: ./usr/lib/systemd/system/minecraft.service
+    src: usr/lib/systemd/system/minecraft.service
     dest: /usr/lib/systemd/system/minecraft.service
     owner: root
     group: root
