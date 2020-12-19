@@ -1,0 +1,29 @@
+---
+
+### common.yml:main.yml
+
+# TODO: 冪等性必要
+- name: fwd before setting
+  lineinfile:
+    path: /etc/ufw/before.rules
+    line: |
+      :DROP_EXCEPT_JP - [0:0]
+      -A DROP_EXCEPT_JP -j ACCEPT
+      -A ufw-before-input -j DROP_EXCEPT_JP
+    insertafter: '^COMMIT$'
+
+- name: fwd after setting
+  copy:
+    src: ./etc/ufw/after.init
+    dest: /etc/ufw/after.init
+    owner: root
+    group: root
+    mode: 0755
+
+- name: make script which generate iptables cmd
+  copy:
+    src: ./etc/ufw/drop_except_jp.sh
+    dest: /etc/ufw/drop_except_jp.sh
+    owner: root
+    group: root
+    mode: 0755

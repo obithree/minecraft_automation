@@ -13,3 +13,10 @@
   gather_facts: False
   roles:
     - name: minecraft
+
+- name: Setting firewall
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  roles:
+    - name: firewall
