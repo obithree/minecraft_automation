@@ -4,7 +4,7 @@
 
 - name: apt install screen
   apt:
-    name screen
+    name: screen
 
 - name: Allow minecraft through firewall
   ufw:
@@ -14,21 +14,21 @@
 
 - name: add user.
   user: 
-    name: {{ minecraft.user_name }}
+    name: '{{ minecraft.user_name }}'
     createhome: yes
 
 - name: make minecraft directory
   file:
     path: /opt/minecraft/server
     state: directory
-    owner: {{ minecraft.user_name }}
-    group: {{ minecraft.user_name }}
+    owner: '{{ minecraft.user_name }}'
+    group: '{{ minecraft.user_name }}'
     mode: 0755
     recurse: true
 
 - name: get minecraft server file
   get_url:
-    url: {{ minecraft.download_url }}
+    url: '{{ minecraft.download_url }}'
     dest: /opt/minecraft/server/server.jar
     force: false
 
@@ -36,28 +36,28 @@
   copy:
     src: ./opt/minecraft/server/minecraft_server_start.sh
     dest: /opt/minecraft/server/minecraft_server_start.sh
-    owner: {{ minecraft.user_name }}
-    group: {{ minecraft.user_name }}
+    owner: '{{ minecraft.user_name }}'
+    group: '{{ minecraft.user_name }}'
     mode: 0755
 
 - name: make stop script
   copy:
     src: ./opt/minecraft/server/minecraft_server_stop.sh
     dest: /opt/minecraft/server/minecraft_server_stop.sh
-    owner: {{ minecraft.user_name }}
-    group: {{ minecraft.user_name }}
+    owner: '{{ minecraft.user_name }}'
+    group: '{{ minecraft.user_name }}'
     mode: 0755
 
 - name: make eula.txt
   copy:
     src: ./opt/minecraft/server/eula.txt
     dest: /opt/minecraft/server/eula.txt
-    owner: {{ minecraft.user_name }}
-    group: {{ minecraft.user_name }}
+    owner: '{{ minecraft.user_name }}'
+    group: '{{ minecraft.user_name }}'
     mode: 0755
 
 - name: make service file
-  template::
+  template:
     src: ./usr/lib/systemd/system/minecraft.service
     dest: /usr/lib/systemd/system/minecraft.service
     owner: root
