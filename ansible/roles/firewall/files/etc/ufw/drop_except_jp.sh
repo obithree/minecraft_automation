@@ -19,5 +19,7 @@ if [ -f /tmp/cidr.txt ]; then
     generate_iptabels_cmd /tmp/cidr.txt > /etc/ufw/after.init.drop_except_jp
 fi
 
+chmod 755 /etc/ufw/after.init.drop_except_jp
+
 rm -f /tmp/cidr.txt
 rm -f /tmp/cidr.txt.gz

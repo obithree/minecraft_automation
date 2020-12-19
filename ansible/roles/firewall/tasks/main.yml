@@ -3,14 +3,14 @@
 ### common.yml:main.yml
 
 # TODO: 冪等性必要
-- name: fwd before setting
-  lineinfile:
-    path: /etc/ufw/before.rules
-    line: |
-      :DROP_EXCEPT_JP - [0:0]
-      -A DROP_EXCEPT_JP -j ACCEPT
-      -A ufw-before-input -j DROP_EXCEPT_JP
-    insertafter: '^COMMIT$'
+# - name: fwd before setting
+#   lineinfile:
+#     path: /etc/ufw/before.rules
+#     line: |
+#       :DROP_EXCEPT_JP - [0:0]
+#       -A DROP_EXCEPT_JP -j ACCEPT
+#       -A ufw-before-input -j DROP_EXCEPT_JP
+#     insertafter: '^COMMIT$'
 
 - name: fwd after setting
   copy:
@@ -27,3 +27,11 @@
     owner: root
     group: root
     mode: 0755
+
+- name: execute
+  shell: /etc/ufw/drop_except_jp.sh
+
+- name: 再起動
+  service:
+    name: ufw
+    state: restarted
