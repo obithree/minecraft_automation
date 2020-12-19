@@ -2,23 +2,23 @@
 
 ### common.yml:main.yml
 
-#SELinuxを"disabled"にして無効に。
-- name: Configure / SELinux Disabled
-  selinux:
-    policy: targeted
-    state: disabled
+# #SELinuxを"disabled"にして無効に。
+# - name: Configure / SELinux Disabled
+#   selinux:
+#     policy: targeted
+#     state: disabled
 
-#タイムゾーンを変更する
-- name: Set Timezone
-  timezone:
-    name: "{{ common.timezone }}"
+# #タイムゾーンを変更する
+# - name: Set Timezone
+#   timezone:
+#     name: "{{ common.timezone }}"
 
-#localeの設定を変更する。
-#もし、すでの設定先のLANGだった場合スキップする。
-- name: Change locale Setting
-  command: localectl set-locale LANG={{ common.lang }}
-  when: ansible_env.LANG != common.lang
-  register: locale_facts
+# #localeの設定を変更する。
+# #もし、すでの設定先のLANGだった場合スキップする。
+# - name: Change locale Setting
+#   command: localectl set-locale LANG={{ common.lang }}
+#   when: ansible_env.LANG != common.lang
+#   register: locale_facts
 
 #- name: add user.
 #  user: 
