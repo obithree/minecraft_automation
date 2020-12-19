@@ -1,0 +1,15 @@
+[Unit]
+Description=Minecraft Server Service
+After=network.target
+
+[Service]
+Type=forking
+User={{minecraft.user_name}}
+Group={{minecraft.user_name}}
+WorkingDirectory=/opt/minecraft/server/
+ExecStart=/opt/minecraft/server/minecraft_server_start.sh
+ExecStop=/opt/minecraft/server/minecraft_server_stop.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

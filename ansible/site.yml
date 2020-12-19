@@ -1,0 +1,15 @@
+---
+
+- name: Setting common 
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  roles:
+    - name: common
+
+- name: Setting Minecraft
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  roles:
+    - name: minecraft

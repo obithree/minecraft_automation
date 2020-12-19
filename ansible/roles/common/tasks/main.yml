@@ -1,0 +1,91 @@
+---
+
+### common.yml:main.yml
+
+#SELinuxを"disabled"にして無効に。
+- name: Configure / SELinux Disabled
+  selinux:
+    policy: targeted
+    state: disabled
+
+#タイムゾーンを変更する
+- name: Set Timezone
+  timezone:
+    name: "{{ common.timezone }}"
+
+#localeの設定を変更する。
+#もし、すでの設定先のLANGだった場合スキップする。
+- name: Change locale Setting
+  command: localectl set-locale LANG={{ common.lang }}
+  when: ansible_env.LANG != common.lang
+  register: locale_facts
+
+#- name: add user.
+#  user: 
+#    name: "{{common.user_name}}"
+#    createhome: yes
+
+
+#- name: make .ssh directory
+#  file:
+#    path: /home/{{common.user_name}}/.ssh
+#    state: directory
+#    owner: "{{common.user_name}}"
+#    group: "{{common.user_name}}"
+#    mode:  0700
+
+#- name: copy ssh key
+#  copy:
+#    src: /root/.ssh/authorized_keys
+#    dest: /home/{{common.user_name}}/.ssh/authorized_keys
+#    owner: "{{common.user_name}}"
+#    group: "{{common.user_name}}"
+#    mode: 0600
+
+#- name: add sudoers.
+#  lineinfile:
+#    path: /etc/sudoers
+#    state: present
+#    regexp: "^%{{common.user_name}} ALL="
+#    line: "%{{common.user_name}} ALL=(ALL) NOPASSWD: ALL"
+#    validate: '/usr/sbin/visudo -cf %s'
+
+- name: comment out PermitRootLogin yes
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: "^PermitRootLogin yes"
+    regexp: "^#PermitRootLogin yes"
+    line: "#PermitRootLogin yes"
+
+- name: add PermitRootLogin no
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: "^PermitRootLogin no"
+    insertafter: '^#PermitRootLogin yes'
+    line: "PermitRootLogin no"
+
+- name: 再起動
+  service:
+    name: sshd
+    state: restarted
+
+- name: Allow ssh through firewall
+  ufw:
+    proto: tcp
+    port: 22
+    rule: allow
+
+- name: Set ufw policy
+  ufw:
+    state: enabled
+    direction: incoming
+    policy: deny
+
+- name: apt update
+  apt:
+    update_cache: yes
+- name: apt upgrade
+  apt:
+    upgrade: yes

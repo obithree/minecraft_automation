@@ -1,0 +1,6 @@
+---
+
+common:
+  user_name: mc_operator
+  timezone: Asia/Tokyo
+  lang: ja_JP.utf8

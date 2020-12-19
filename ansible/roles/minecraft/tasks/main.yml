@@ -1,0 +1,72 @@
+---
+
+### common.yml:main.yml
+
+- name: apt install screen
+  apt:
+    name screen
+
+- name: Allow minecraft through firewall
+  ufw:
+    proto: tcp
+    port: 25565
+    rule: allow
+
+- name: add user.
+  user: 
+    name: {{ minecraft.user_name }}
+    createhome: yes
+
+- name: make minecraft directory
+  file:
+    path: /opt/minecraft/server
+    state: directory
+    owner: {{ minecraft.user_name }}
+    group: {{ minecraft.user_name }}
+    mode: 0755
+    recurse: true
+
+- name: get minecraft server file
+  get_url:
+    url: {{ minecraft.download_url }}
+    dest: /opt/minecraft/server/server.jar
+    force: false
+
+- name: make startup script
+  copy:
+    src: ./opt/minecraft/server/minecraft_server_start.sh
+    dest: /opt/minecraft/server/minecraft_server_start.sh
+    owner: {{ minecraft.user_name }}
+    group: {{ minecraft.user_name }}
+    mode: 0755
+
+- name: make stop script
+  copy:
+    src: ./opt/minecraft/server/minecraft_server_stop.sh
+    dest: /opt/minecraft/server/minecraft_server_stop.sh
+    owner: {{ minecraft.user_name }}
+    group: {{ minecraft.user_name }}
+    mode: 0755
+
+- name: make eula.txt
+  copy:
+    src: ./opt/minecraft/server/eula.txt
+    dest: /opt/minecraft/server/eula.txt
+    owner: {{ minecraft.user_name }}
+    group: {{ minecraft.user_name }}
+    mode: 0755
+
+- name: make service file
+  template::
+    src: ./usr/lib/systemd/system/minecraft.service
+    dest: /usr/lib/systemd/system/minecraft.service
+    owner: root
+    group: root
+    mode: 0755
+
+- name: マインクラフトを自動起動
+  service:
+    name: minecraft
+    state: started
+    enabled: yes
+
