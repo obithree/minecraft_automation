@@ -1,0 +1,4 @@
+[Minecraft]
+title=minecraft_server
+description=this port is default port of minecraft.
+ports=25565/tcp
