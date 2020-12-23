@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: register r53
+
+Parameters:
+  DomainName:
+    Description: Route Domain Name ex. 'example.com' 
+    Type: String
+  HostName:
+    Description: Word of before '.example.com' 
+    Type: String
+    Default: minecraft
+  ProjectName:
+    Description: set Project Tag 
+    Type: String
+  Phase:
+    Description: set Phase Tag 
+    Type: String
+    AllowedValues:
+      - prd
+      - dev
+  ResourceRecords:
+    Description: A Record of IPaddress ex. 10.0.0.0
+    Type: String
+    Default: minecraft
+
+Resources:
+  Route53DomainName:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: !Ref DomainName
+      HostedZoneTags:
+        - Key: Name
+          Value: !Ref DomainName
+        - Key: Phase
+          Value: !Ref Phase
+        - Key: Project
+          Value: !Ref ProjectName
+  Route53HostedZone:
+    Type: AWS::Route53::RecordSet
+    Properties: 
+      HostedZoneId: !GetAtt Route53DomainName.Id
+      Name: !Sub ${HostName}.${DomainName}
+      ResourceRecords: 
+        - !Ref ResourceRecords
+      TTL: 300
+      Type: A
