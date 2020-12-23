@@ -2,36 +2,33 @@
 
 ### common.yml:main.yml
 
-# TODO: 冪等性必要
-# - name: fwd before setting
-#   lineinfile:
-#     path: /etc/ufw/before.rules
-#     line: |
-#       :DROP_EXCEPT_JP - [0:0]
-#       -A DROP_EXCEPT_JP -j ACCEPT
-#       -A ufw-before-input -j DROP_EXCEPT_JP
-#     insertafter: '^COMMIT$'
+- name: 
+  service:
+    name: ufw
+    state: started
+    enabled: yes
 
-- name: fwd after setting
-  copy:
-    src: ./etc/ufw/after.init
-    dest: /etc/ufw/after.init
-    owner: root
-    group: root
-    mode: 0755
+- name: Allow minecraft through firewall
+  ufw:
+    name: Minecraft
+    src: 192.168.10.0/24
+    rule: allow
 
 - name: make script which generate iptables cmd
   copy:
-    src: ./etc/ufw/drop_except_jp.sh
-    dest: /etc/ufw/drop_except_jp.sh
+    src: ./etc/ufw/allow_jp_iplist.sh
+    dest: /etc/ufw/allow_jp_iplist.sh
     owner: root
     group: root
     mode: 0755
 
-- name: execute
-  shell: /etc/ufw/drop_except_jp.sh
+- name: make minecraft's application file 
+  copy:
+    src: ./etc/ufw/applications.d/minecraft-server
+    dest: /etc/ufw/applications.d/minecraft-server
+    owner: root
+    group: root
+    mode: 0755
 
-- name: 再起動
-  service:
-    name: ufw
-    state: restarted
+#- name: execute
+#  shell: /etc/ufw/allow_jp_iplist.sh

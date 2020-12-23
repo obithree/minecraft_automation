@@ -66,7 +66,7 @@
     insertafter: '^#PermitRootLogin yes'
     line: "PermitRootLogin no"
 
-- name: 再起動
+- name: reboot sshd.service
   service:
     name: sshd
     state: restarted
@@ -74,6 +74,7 @@
 - name: Allow ssh through firewall
   ufw:
     proto: tcp
+    src: 192.168.10.0/24
     port: 22
     rule: allow
 
