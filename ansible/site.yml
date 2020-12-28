@@ -20,3 +20,10 @@
   gather_facts: False
   roles:
     - name: firewall
+
+- name: Setting ddns
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  roles:
+    - name: ddns

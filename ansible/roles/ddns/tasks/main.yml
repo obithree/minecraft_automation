@@ -2,33 +2,35 @@
 
 ### common.yml:main.yml
 
-- name: 
-  service:
-    name: ufw
-    state: started
-    enabled: yes
+- name: apt install pip
+  apt:
+    name: python3-pip
 
-- name: Allow minecraft through firewall
-  ufw:
-    name: Minecraft
-    src: 192.168.10.0/24
-    rule: allow
+- name: pip install boto3
+  pip:
+    name: boto3
+
+- name: make minecraft directory
+  file:
+    path: /opt/ddns
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: true
 
 - name: make script which generate iptables cmd
   copy:
-    src: ./etc/ufw/allow_jp_iplist.sh
-    dest: /etc/ufw/allow_jp_iplist.sh
+    src: ./opt/ddns/ddns.py
+    dest: /opt/ddns/ddns.py
     owner: root
     group: root
     mode: 0755
 
-- name: make minecraft's application file 
-  copy:
-    src: ./etc/ufw/applications.d/minecraft-server
-    dest: /etc/ufw/applications.d/minecraft-server
-    owner: root
-    group: root
-    mode: 0755
-
-#- name: execute
-#  shell: /etc/ufw/allow_jp_iplist.sh
+- name: setting cron
+  become: True
+  cron:
+    name: ddns
+    minute: "*/5"
+    job: "python3 /opt/ddns/ddns.py {{ minecraft.domain_name }} {{ minecraft.hostname }}"
+    state: present
