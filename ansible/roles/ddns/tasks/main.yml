@@ -10,6 +10,10 @@
   pip:
     name: boto3
 
+- name: pip install awscli
+  pip:
+    name: awscli
+
 - name: make minecraft directory
   file:
     path: /opt/ddns
@@ -34,3 +38,11 @@
     minute: "*/5"
     job: "python3 /opt/ddns/ddns.py {{ minecraft.domain_name }} {{ minecraft.hostname }}"
     state: present
+
+- name: make logrotate setting
+  copy:
+    src: ./etc/logrotate.d/ddns
+    dest: /etc/logrotate.d/ddns
+    owner: root
+    group: root
+    mode: 0644

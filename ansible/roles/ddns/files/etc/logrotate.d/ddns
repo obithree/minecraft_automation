@@ -1,0 +1,8 @@
+/var/log/ddns.log {
+  rotate 12
+  monthly
+  compress
+  missingok
+  notifempty
+  su root root
+}
