@@ -68,3 +68,20 @@
     state: started
     enabled: yes
 
+- name: make backup script
+  copy:
+    src: opt/minecraft/server/minecraft_backup.sh
+    dest: /opt/minecraft/server/minecraft_backup.sh
+    owner: '{{ minecraft.user_name }}'
+    group: '{{ minecraft.user_name }}'
+    mode: 0755
+
+- name: setting cron
+  become: True
+  cron:
+    name: minecraft_backup
+    minute: 0
+    hour: 7
+    weekday: 4
+    job: "/opt/minecraft/server/minecraft_backup.sh"
+    state: present
