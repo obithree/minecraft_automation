@@ -1,5 +1,8 @@
 ---
 
+ddns:
+  user_name: ddns
+
 minecraft:
   domain_name: example.com
   hostname: minecraft

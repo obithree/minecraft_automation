@@ -14,12 +14,16 @@
   pip:
     name: awscli
 
+- name: add user.
+  user: 
+    name: '{{ ddns.user_name }}'
+
 - name: make minecraft directory
   file:
     path: /opt/ddns
     state: directory
-    owner: root
-    group: root
+    owner: '{{ ddns.user_name }}'
+    group: '{{ ddns.user_name }}'
     mode: 0755
     recurse: true
 
@@ -27,14 +31,15 @@
   copy:
     src: ./opt/ddns/ddns.py
     dest: /opt/ddns/ddns.py
-    owner: root
-    group: root
+    owner: '{{ ddns.user_name }}'
+    group: '{{ ddns.user_name }}'
     mode: 0755
 
 - name: setting cron
   become: True
   cron:
     name: ddns
+    user: '{{ ddns.user_name }}'
     minute: "*/5"
     job: "python3 /opt/ddns/ddns.py {{ minecraft.domain_name }} {{ minecraft.hostname }}"
     state: present
