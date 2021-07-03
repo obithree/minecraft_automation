@@ -8,7 +8,7 @@
 
 - name: apt install openjdk
   apt:
-    name: openjdk-8-jre
+    name: openjdk-16-jdk-headless
 
 - name: add user.
   user: 
