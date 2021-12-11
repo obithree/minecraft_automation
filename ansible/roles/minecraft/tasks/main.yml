@@ -8,7 +8,7 @@
 
 - name: apt install openjdk
   apt:
-    name: openjdk-16-jdk-headless
+    name: openjdk-17-jdk
 
 - name: add user.
   user: 
@@ -24,11 +24,11 @@
     mode: 0755
     recurse: true
 
-- name: get minecraft server file
-  get_url:
-    url: '{{ minecraft.download_url }}'
-    dest: /opt/minecraft/server/server.jar
-    force: false
+# - name: get minecraft server file
+#   get_url:
+#     url: '{{ minecraft.download_url }}'
+#     dest: /opt/minecraft/server/server.jar
+#     force: false
 
 - name: make startup script
   copy:

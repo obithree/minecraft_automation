@@ -8,11 +8,6 @@
     state: started
     enabled: yes
 
-- name: Allow minecraft through firewall
-  ufw:
-    name: Minecraft
-    src: 192.168.10.0/24
-    rule: allow
 
 - name: make script which generate iptables cmd
   copy:
@@ -29,6 +24,12 @@
     owner: root
     group: root
     mode: 0755
+
+- name: Allow minecraft through firewall
+  ufw:
+    name: Minecraft
+    src: 192.168.10.0/24
+    rule: allow
 
 #- name: execute
 #  shell: /etc/ufw/allow_jp_iplist.sh

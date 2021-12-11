@@ -20,36 +20,6 @@
 #   when: ansible_env.LANG != common.lang
 #   register: locale_facts
 
-#- name: add user.
-#  user: 
-#    name: "{{common.user_name}}"
-#    createhome: yes
-
-
-#- name: make .ssh directory
-#  file:
-#    path: /home/{{common.user_name}}/.ssh
-#    state: directory
-#    owner: "{{common.user_name}}"
-#    group: "{{common.user_name}}"
-#    mode:  0700
-
-#- name: copy ssh key
-#  copy:
-#    src: /root/.ssh/authorized_keys
-#    dest: /home/{{common.user_name}}/.ssh/authorized_keys
-#    owner: "{{common.user_name}}"
-#    group: "{{common.user_name}}"
-#    mode: 0600
-
-#- name: add sudoers.
-#  lineinfile:
-#    path: /etc/sudoers
-#    state: present
-#    regexp: "^%{{common.user_name}} ALL="
-#    line: "%{{common.user_name}} ALL=(ALL) NOPASSWD: ALL"
-#    validate: '/usr/sbin/visudo -cf %s'
-
 - name: comment out PermitRootLogin yes
   lineinfile:
     path: /etc/ssh/sshd_config
