@@ -22,13 +22,63 @@
     owner: '{{ minecraft.user_name }}'
     group: '{{ minecraft.user_name }}'
     mode: 0755
-    recurse: true
+    # recurse: true
 
 # - name: get minecraft server file
 #   get_url:
-#     url: '{{ minecraft.download_url }}'
+#     url: '{{ minecraft_url.download_url }}'
 #     dest: /opt/minecraft/server/server.jar
 #     force: false
+
+
+- name: check jarfile
+  stat:
+    path: /opt/minecraft/server/jar_files/spigot-{{ build_minecraft.build_version }}.jar
+  register: check_jar_file
+
+- when:
+    - check_jar_file.stat.exists == False
+  block:
+  - name: make minecraft build directory
+    file:
+      path: /tmp/builds_tmp
+      state: directory
+      owner: '{{ minecraft.user_name }}'
+      group: '{{ minecraft.user_name }}'
+      mode: 0755
+  - name: get minecraft spigot buildtools
+    get_url:
+      url: '{{ build_minecraft.spigot_tool_url }}'
+      dest: /tmp/builds_tmp/BuildTools.jar
+      force: false
+
+  - name: build server.jar
+    shell:
+      cmd: java -jar BuildTools.jar --rev {{ build_minecraft.build_version }}
+      chdir: /tmp/builds_tmp/
+
+  - name: move server.jar
+    copy:
+      src: /tmp/builds_tmp/spigot-{{ build_minecraft.build_version }}.jar
+      dest: /opt/minecraft/server/jar_files/spigot-{{ build_minecraft.build_version }}.jar
+      owner: '{{ minecraft.user_name }}'
+      group: '{{ minecraft.user_name }}'
+      mode: 0755
+
+  - name: create link
+    file:
+      src: /opt/minecraft/server/jar_files/spigot-{{ build_minecraft.build_version }}.jar
+      dest: /opt/minecraft/server/server.jar
+      owner: '{{ minecraft.user_name }}'
+      group: '{{ minecraft.user_name }}'
+      mode: 0777
+      state: link
+      follow: no
+
+  - name: make minecraft build directory
+    file:
+      path: /tmp/builds_tmp
+      state: absent
 
 - name: make startup script
   copy:
