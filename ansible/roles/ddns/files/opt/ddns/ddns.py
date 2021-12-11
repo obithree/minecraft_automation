@@ -5,7 +5,7 @@ import argparse
 from logging import getLogger, StreamHandler, FileHandler, DEBUG, Formatter
 logger = getLogger(__name__)
 handler = StreamHandler()
-file_handler = FileHandler('/var/log/ddns.log')
+file_handler = FileHandler('/var/log/ddns/ddns.log')
 log_format = '%(levelname)s : %(asctime)s : %(message)s'
 fmt = Formatter(log_format)
 handler.setFormatter(fmt)
